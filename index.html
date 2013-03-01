@@ -23,6 +23,7 @@
         <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/"></script>
         <script>
             dojo.require("esri.map");
+            dojo.require("dojox.html.entities");
 
             function init() {
                 map = new esri.Map("mapDiv", {
@@ -45,7 +46,7 @@
                 //console.log(extent);
                 var message = "";
                 message = "Xmin: " + extent.xmin + " " + "Ymin: " + extent.ymin + " " + "Xmax: " + extent.xmax + " " + "Ymax: " + extent.ymax + " (wkid: " + extent.spatialReference.wkid + ")";
-                dojo.byId("extent").innerText = jsExtent(extent) + "\n" + flexExtent(extent) + "\n" + silverlightExtent(extent);
+                dojo.byId("extent").innerHTML = jsExtent(extent) + "</br>" + flexExtent(extent) + "</br>" + silverlightExtent(extent);
             }
 
             function jsExtent(extent) {
@@ -69,7 +70,7 @@
                     ' ymax=' + extent.ymax +
                     '><esri:SpatialReference wkid=' + extent.spatialReference.wkid +
                     '/></esri:Extent>';
-                return message;
+                return dojox.html.entities.encode(message);
             }
 
             function silverlightExtent(extent) {
