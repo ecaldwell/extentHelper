@@ -59,25 +59,27 @@
         <div id="topExtent" class="mapLabel">top</div>
         <div id="rightExtent" class="mapLabel">right</div>
         <div id="bottomExtent" class="mapLabel">bottom</div>
-        <div id="extent">extent goes here</div>
+        <div id="extent">
+            show
+            <button id="btnJavascript">javascript</button>
+            <button id="btnFlex">flex</button>
+            <button id="btnSilverlight">silverlight</button>
+        </div>
         <div id="mapDiv"></div>
-        
         
         <script>
             dojo.require("esri.map");
-            dojo.require("dojox.html.entities");
             
             function toWGS(x, y) {
                 var mercatorX, mercatorY;
-
+                
                 num3 = x / 6378137.0;
                 num4 = num3 * 57.295779513082323;
                 num5 = Math.floor((num4 + 180.0) / 360.0);
                 num6 = num4 - (num5 * 360.0);
                 num7 = 1.5707963267948966 - (2.0 * Math.atan(Math.exp((-1.0 * y) / 6378137.0)));
-                mercatorX = num6,
+                mercatorX = num6;
                 mercatorY = num7 * 57.295779513082323;
-                console.log(mercatorX, mercatorY);
                 
                 return [mercatorX, mercatorY];
             }
@@ -90,14 +92,27 @@
                 });
                 
                 dojo.connect(map, "onExtentChange", function(extent) {
-                    getExtent(extent);
+                    //getExtent(extent);
                     updateExtentLabels(extent);
                 });
                 
                 dojo.connect(map, "onPan", function(extent) {
-                    getExtent(extent);
+                    //getExtent(extent);
                     updateExtentLabels(extent);
                 });
+                
+                dojo.connect(dojo.byId("btnJavascript"), "onclick", function() {
+                    alert(jsExtent(map.extent));
+                });
+                
+                dojo.connect(dojo.byId("btnFlex"), "onclick", function() {
+                    alert(flexExtent(map.extent));
+                });
+                
+                dojo.connect(dojo.byId("btnSilverlight"), "onclick", function() {
+                    alert(silverlightExtent(map.extent));
+                });
+                
             }
             dojo.ready(init);
             
@@ -118,7 +133,7 @@
             
             function jsExtent(extent) {
                 var message;
-                message = 'javascript: esri.geometry.Extent({' +
+                message = 'esri.geometry.Extent({' +
                     ' "xmin":' + extent.xmin +
                     ',"ymin":' + extent.ymin +
                     ',"xmax":' + extent.xmax +
@@ -130,19 +145,19 @@
             
             function flexExtent(extent) {
                 var message;
-                message = 'flex: <esri:Extent id="initialExtent"' +
+                message = '<esri:Extent id="initialExtent"' +
                     ' xmin=' + extent.xmin +
                     ' ymin=' + extent.ymin +
                     ' xmax=' + extent.xmax +
                     ' ymax=' + extent.ymax +
                     '><esri:SpatialReference wkid=' + extent.spatialReference.wkid +
                     '/></esri:Extent>';
-                return dojox.html.entities.encode(message);
+                return message;
             }
             
             function silverlightExtent(extent) {
                 var message;
-                message = 'silverlight: Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax +
+                message = 'Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax +
                     '"';
                 return message;
             }
