@@ -2,7 +2,7 @@
 <html>
     
     <head>
-        <title>Create a Map</title>
+        <title>Extent Helper</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9">
         <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/js/dojo/dijit/themes/claro/claro.css">
@@ -13,42 +13,109 @@
                 margin:0;
                 height:100%;
             }
+            .mapLabel {
+                width: 130px;
+                position: absolute;
+                z-index: 10;
+                font-size: x-large;
+                padding: 5px;
+                background-color: rgba(255, 255, 255, .8);
+                text-align: center;
+                border-radius: 5px;
+            }
             #extent {
+                position: absolute;
+                z-index: 10;
+                bottom: 0px;
                 font-size: small;
                 padding: 5px;
-                background-color: rgba(255, 255, 255, .75);
+                background-color: rgba(255, 255, 255, .8);
+            }
+            #leftExtent {
+                left: 0px;
+                bottom: 50%;
+            }
+            #topExtent {
+                left: 50%;
+                margin-left: -65px;
+                top: 0px;
+            }
+            #rightExtent {
+                right: 0px;
+                bottom: 50%;
+            }
+            #bottomExtent {
+                left: 50%;
+                margin-left: -65px;
                 bottom: 0px;
             }
         </style>
         <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/"></script>
+        
+    </head>
+    
+    <body class="claro">
+        <div id="leftExtent" class="mapLabel">left</div>
+        <div id="topExtent" class="mapLabel">top</div>
+        <div id="rightExtent" class="mapLabel">right</div>
+        <div id="bottomExtent" class="mapLabel">bottom</div>
+        <div id="extent">extent goes here</div>
+        <div id="mapDiv"></div>
+        
+        
         <script>
             dojo.require("esri.map");
             dojo.require("dojox.html.entities");
+            
+            function toWGS(x, y) {
+                var mercatorX, mercatorY;
 
+                num3 = x / 6378137.0;
+                num4 = num3 * 57.295779513082323;
+                num5 = Math.floor((num4 + 180.0) / 360.0);
+                num6 = num4 - (num5 * 360.0);
+                num7 = 1.5707963267948966 - (2.0 * Math.atan(Math.exp((-1.0 * y) / 6378137.0)));
+                mercatorX = num6,
+                mercatorY = num7 * 57.295779513082323;
+                console.log(mercatorX, mercatorY);
+                
+                return [mercatorX, mercatorY];
+            }
+            
             function init() {
                 map = new esri.Map("mapDiv", {
                     center: [-56.049, 38.485],
                     zoom: 3,
                     basemap: "topo"
                 });
-
+                
                 dojo.connect(map, "onExtentChange", function(extent) {
                     getExtent(extent);
+                    updateExtentLabels(extent);
                 });
-
+                
                 dojo.connect(map, "onPan", function(extent) {
                     getExtent(extent);
+                    updateExtentLabels(extent);
                 });
             }
             dojo.ready(init);
-
+            
+            function updateExtentLabels(extent) {
+                minCoords = toWGS(extent.xmin, extent.ymin);
+                maxCoords = toWGS(extent.xmax, extent.ymax);
+                dojo.byId("leftExtent").innerHTML = minCoords[0].toFixed(6);
+                dojo.byId("topExtent").innerHTML = maxCoords[1].toFixed(6);
+                dojo.byId("rightExtent").innerHTML = maxCoords[0].toFixed(6);
+                dojo.byId("bottomExtent").innerHTML = minCoords[1].toFixed(6);
+            }
+            
             function getExtent(extent) {
-                //console.log(extent);
                 var message = "";
                 message = "Xmin: " + extent.xmin + " " + "Ymin: " + extent.ymin + " " + "Xmax: " + extent.xmax + " " + "Ymax: " + extent.ymax + " (wkid: " + extent.spatialReference.wkid + ")";
                 dojo.byId("extent").innerHTML = jsExtent(extent) + "</br>" + flexExtent(extent) + "</br>" + silverlightExtent(extent);
             }
-
+            
             function jsExtent(extent) {
                 var message;
                 message = 'javascript: esri.geometry.Extent({' +
@@ -60,7 +127,7 @@
                     '}});';
                 return message;
             }
-
+            
             function flexExtent(extent) {
                 var message;
                 message = 'flex: <esri:Extent id="initialExtent"' +
@@ -72,7 +139,7 @@
                     '/></esri:Extent>';
                 return dojox.html.entities.encode(message);
             }
-
+            
             function silverlightExtent(extent) {
                 var message;
                 message = 'silverlight: Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax +
@@ -80,11 +147,7 @@
                 return message;
             }
         </script>
-    </head>
-    
-    <body class="claro">
-        <div id="extent" style="position: absolute; z-index: 10">extent goes here</div>
-        <div id="mapDiv"></div>
+        
     </body>
-
+    
 </html>
