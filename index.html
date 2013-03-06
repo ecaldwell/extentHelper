@@ -23,13 +23,13 @@
                 text-align: center;
                 border-radius: 5px;
             }
-            #extent {
+            #buttons {
                 position: absolute;
                 z-index: 10;
                 bottom: 0px;
-                font-size: small;
+                /*font-size: small;
                 padding: 5px;
-                background-color: rgba(255, 255, 255, .8);
+                background-color: rgba(255, 255, 255, .8);*/
             }
             #leftExtent {
                 left: 0px;
@@ -52,23 +52,10 @@
         </style>
         <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/"></script>
         
-    </head>
-    
-    <body class="claro">
-        <div id="leftExtent" class="mapLabel">left</div>
-        <div id="topExtent" class="mapLabel">top</div>
-        <div id="rightExtent" class="mapLabel">right</div>
-        <div id="bottomExtent" class="mapLabel">bottom</div>
-        <div id="extent">
-            show
-            <button id="btnJavascript">javascript</button>
-            <button id="btnFlex">flex</button>
-            <button id="btnSilverlight">silverlight</button>
-        </div>
-        <div id="mapDiv"></div>
-        
         <script>
             dojo.require("esri.map");
+            dojo.require("dijit.Dialog");
+            dojo.require("dojox.html.entities");
             
             function toWGS(x, y) {
                 var mercatorX, mercatorY;
@@ -92,25 +79,39 @@
                 });
                 
                 dojo.connect(map, "onExtentChange", function(extent) {
-                    //getExtent(extent);
                     updateExtentLabels(extent);
                 });
                 
                 dojo.connect(map, "onPan", function(extent) {
-                    //getExtent(extent);
                     updateExtentLabels(extent);
                 });
                 
                 dojo.connect(dojo.byId("btnJavascript"), "onclick", function() {
-                    alert(jsExtent(map.extent));
+                    var popup = new dijit.Dialog({
+                        title: "Javascript extent",
+                        style: "width: auto",
+                        content: jsExtent(map.extent)
+                    });
+                    popup.show();
+                    
                 });
                 
                 dojo.connect(dojo.byId("btnFlex"), "onclick", function() {
-                    alert(flexExtent(map.extent));
+                    var popup = new dijit.Dialog({
+                        title: "Flex extent",
+                        style: "width: auto",
+                        content: dojox.html.entities.encode(flexExtent(map.extent))
+                    });
+                    popup.show();
                 });
                 
                 dojo.connect(dojo.byId("btnSilverlight"), "onclick", function() {
-                    alert(silverlightExtent(map.extent));
+                    var popup = new dijit.Dialog({
+                        title: "Silverlight extent",
+                        style: "width: auto",
+                        content: silverlightExtent(map.extent)
+                    });
+                    popup.show();
                 });
                 
             }
@@ -162,6 +163,21 @@
                 return message;
             }
         </script>
+        
+    </head>
+    
+    <body class="claro">
+        <div id="leftExtent" class="mapLabel">left</div>
+        <div id="topExtent" class="mapLabel">top</div>
+        <div id="rightExtent" class="mapLabel">right</div>
+        <div id="bottomExtent" class="mapLabel">bottom</div>
+        <div id="buttons">
+            <button id="btnJavascript">javascript</button>
+            <button id="btnFlex">flex</button>
+            <button id="btnSilverlight">silverlight</button>
+        </div>
+        <div id="mapDiv"></div>
+        <div id="dialogOne" data-dojo-type="dijit.Dialog" title="My Dialog Title"></div>
         
     </body>
     
