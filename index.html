@@ -52,22 +52,13 @@
         
         <script>
             dojo.require("esri.map");
+            dojo.require("esri.geometry");
             dojo.require("dijit.Dialog");
             dojo.require("dijit.form.Button");
             dojo.require("dojox.html.entities");
             
-            function toWGS(x, y) {
-                var mercatorX, mercatorY;
-                
-                num3 = x / 6378137.0;
-                num4 = num3 * 57.295779513082323;
-                num5 = Math.floor((num4 + 180.0) / 360.0);
-                num6 = num4 - (num5 * 360.0);
-                num7 = 1.5707963267948966 - (2.0 * Math.atan(Math.exp((-1.0 * y) / 6378137.0)));
-                mercatorX = num6;
-                mercatorY = num7 * 57.295779513082323;
-                
-                return [mercatorX, mercatorY];
+            function toWGS(geom) {
+                return esri.geometry.webMercatorToGeographic(geom);
             }
             
             function init() {
@@ -117,12 +108,12 @@
             dojo.ready(init);
             
             function updateExtentLabels(extent) {
-                minCoords = toWGS(extent.xmin, extent.ymin);
-                maxCoords = toWGS(extent.xmax, extent.ymax);
-                dojo.byId("leftExtent").innerHTML = minCoords[0].toFixed(6);
-                dojo.byId("topExtent").innerHTML = maxCoords[1].toFixed(6);
-                dojo.byId("rightExtent").innerHTML = maxCoords[0].toFixed(6);
-                dojo.byId("bottomExtent").innerHTML = minCoords[1].toFixed(6);
+                wgsExtent = toWGS(extent);
+
+                dojo.byId("leftExtent").innerHTML = wgsExtent.xmin.toFixed(6);
+                dojo.byId("topExtent").innerHTML = wgsExtent.ymax.toFixed(6);
+                dojo.byId("rightExtent").innerHTML = wgsExtent.xmax.toFixed(6);
+                dojo.byId("bottomExtent").innerHTML = wgsExtent.ymin.toFixed(6);
             }
             
             function getExtent(extent) {
