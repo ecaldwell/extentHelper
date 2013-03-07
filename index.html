@@ -27,9 +27,6 @@
                 position: absolute;
                 z-index: 10;
                 bottom: 0px;
-                /*font-size: small;
-                padding: 5px;
-                background-color: rgba(255, 255, 255, .8);*/
             }
             #leftExtent {
                 left: 0px;
@@ -50,11 +47,13 @@
                 bottom: 0px;
             }
         </style>
+        <script>var dojoConfig = { parseOnLoad: true }; // Do this to ensure the buttons draw with the theme.</script>
         <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/"></script>
         
         <script>
             dojo.require("esri.map");
             dojo.require("dijit.Dialog");
+            dojo.require("dijit.form.Button");
             dojo.require("dojox.html.entities");
             
             function toWGS(x, y) {
@@ -73,7 +72,7 @@
             
             function init() {
                 map = new esri.Map("mapDiv", {
-                    center: [-56.049, 38.485],
+                    center: [-95.10, 39.1],
                     zoom: 3,
                     basemap: "topo"
                 });
@@ -172,12 +171,11 @@
         <div id="rightExtent" class="mapLabel">right</div>
         <div id="bottomExtent" class="mapLabel">bottom</div>
         <div id="buttons">
-            <button id="btnJavascript">javascript</button>
-            <button id="btnFlex">flex</button>
-            <button id="btnSilverlight">silverlight</button>
+            <button id="btnJavascript" dojoType="dijit.form.Button">javascript</button>
+            <button id="btnFlex" dojoType="dijit.form.Button">flex</button>
+            <button id="btnSilverlight" dojoType="dijit.form.Button">silverlight</button>
         </div>
         <div id="mapDiv"></div>
-        <div id="dialogOne" data-dojo-type="dijit.Dialog" title="My Dialog Title"></div>
         
     </body>
     
