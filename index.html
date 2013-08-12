@@ -46,10 +46,27 @@
                 margin-left: -65px;
                 bottom: 0px;
             }
+            #centerPoint {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 10px;
+                height: 10px;
+            }
+            #centerLabel {
+                left: 51%;
+                bottom: 51%;
+                font-size: medium;
+                display: none;
+            }
+            #centerPoint:hover ~ #centerLabel {
+                display: block;
+            }
         </style>
-        <script>var dojoConfig = { parseOnLoad: true }; // Do this to ensure the buttons draw with the theme.</script>
+        <script>
+            var dojoConfig = { parseOnLoad: true }; // Do this to ensure the buttons draw with the theme.
+        </script>
         <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/"></script>
-        
         <script>
             dojo.require("esri.map");
             dojo.require("esri.geometry");
@@ -83,7 +100,6 @@
                         content: jsExtent(map.extent)
                     });
                     popup.show();
-                    
                 });
                 
                 dojo.connect(dojo.byId("btnFlex"), "onclick", function() {
@@ -109,11 +125,13 @@
             
             function updateExtentLabels(extent) {
                 wgsExtent = toWGS(extent);
+                var center = esri.geometry.webMercatorToGeographic(extent.getCenter());
 
                 dojo.byId("leftExtent").innerHTML = wgsExtent.xmin.toFixed(6);
                 dojo.byId("topExtent").innerHTML = wgsExtent.ymax.toFixed(6);
                 dojo.byId("rightExtent").innerHTML = wgsExtent.xmax.toFixed(6);
                 dojo.byId("bottomExtent").innerHTML = wgsExtent.ymin.toFixed(6);
+                dojo.byId("centerLabel").innerHTML = center.x.toFixed(6) + ", " + center.y.toFixed(6);
             }
             
             function getExtent(extent) {
@@ -148,12 +166,10 @@
             
             function silverlightExtent(extent) {
                 var message;
-                message = 'Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax +
-                    '"';
+                message = 'Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax + '"';
                 return message;
             }
         </script>
-        
     </head>
     
     <body class="claro">
@@ -167,7 +183,10 @@
             <button id="btnSilverlight" dojoType="dijit.form.Button">silverlight</button>
         </div>
         <div id="mapDiv"></div>
-        
+        <svg id="centerPoint" xmlns="http://www.w3.org/2000/svg">
+            <circle id="crosshair" cx="3" cy="3" r="3" fill="red" />
+            <div id="centerLabel" class="mapLabel">center</div>
+        </svg>
     </body>
     
 </html>
