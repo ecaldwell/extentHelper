@@ -59,9 +59,6 @@
                 font-size: medium;
                 display: none;
             }
-            #centerPoint:hover ~ #centerLabel {
-                display: block;
-            }
         </style>
         <script>
             var dojoConfig = { parseOnLoad: true }; // Do this to ensure the buttons draw with the theme.
@@ -91,6 +88,21 @@
                 
                 dojo.connect(map, "onPan", function(extent) {
                     updateExtentLabels(extent);
+                });
+                
+                dojo.connect(dojo.byId("centerPoint"), "onclick", function() {
+                    // Determine the current setting.
+                    var visibility;
+                    if (dojo.getStyle("centerLabel", "display") === "none") {
+                        visibility = "block";
+                    }
+                    else {
+                        visibility = "none"    
+                    }
+                    // Set the visibility.
+                    dojo.style("centerLabel", {
+                        "display": visibility
+                    });
                 });
                 
                 dojo.connect(dojo.byId("btnJavascript"), "onclick", function() {
