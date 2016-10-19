@@ -104,33 +104,6 @@
                     });
                 });
 
-                dojo.connect(dojo.byId("btnJavascript"), "onclick", function() {
-                    var popup = new dijit.Dialog({
-                        title: "Javascript extent",
-                        style: "width: auto",
-                        content: jsExtent(map.extent)
-                    });
-                    popup.show();
-                });
-
-                dojo.connect(dojo.byId("btnFlex"), "onclick", function() {
-                    var popup = new dijit.Dialog({
-                        title: "Flex extent",
-                        style: "width: auto",
-                        content: dojox.html.entities.encode(flexExtent(map.extent))
-                    });
-                    popup.show();
-                });
-
-                dojo.connect(dojo.byId("btnSilverlight"), "onclick", function() {
-                    var popup = new dijit.Dialog({
-                        title: "Silverlight extent",
-                        style: "width: auto",
-                        content: silverlightExtent(map.extent)
-                    });
-                    popup.show();
-                });
-
             }
             dojo.ready(init);
 
@@ -145,12 +118,6 @@
                 dojo.byId("centerLabel").innerHTML = center.x.toFixed(6) + ", " + center.y.toFixed(6);
             }
 
-            function getExtent(extent) {
-                var message = "";
-                message = "Xmin: " + extent.xmin + " " + "Ymin: " + extent.ymin + " " + "Xmax: " + extent.xmax + " " + "Ymax: " + extent.ymax + " (wkid: " + extent.spatialReference.wkid + ")";
-                dojo.byId("extent").innerHTML = jsExtent(extent) + "</br>" + flexExtent(extent) + "</br>" + silverlightExtent(extent);
-            }
-
             function jsExtent(extent) {
                 var message;
                 message = 'esri.geometry.Extent({' +
@@ -163,23 +130,6 @@
                 return message;
             }
 
-            function flexExtent(extent) {
-                var message;
-                message = '<esri:Extent id="initialExtent"' +
-                    ' xmin=' + extent.xmin +
-                    ' ymin=' + extent.ymin +
-                    ' xmax=' + extent.xmax +
-                    ' ymax=' + extent.ymax +
-                    '><esri:SpatialReference wkid=' + extent.spatialReference.wkid +
-                    '/></esri:Extent>';
-                return message;
-            }
-
-            function silverlightExtent(extent) {
-                var message;
-                message = 'Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax + '"';
-                return message;
-            }
         </script>
     </head>
 
@@ -188,11 +138,6 @@
         <div id="topExtent" class="mapLabel">top</div>
         <div id="rightExtent" class="mapLabel">right</div>
         <div id="bottomExtent" class="mapLabel">bottom</div>
-        <div id="buttons">
-            <button id="btnJavascript" dojoType="dijit.form.Button">javascript</button>
-            <button id="btnFlex" dojoType="dijit.form.Button">flex</button>
-            <button id="btnSilverlight" dojoType="dijit.form.Button">silverlight</button>
-        </div>
         <div id="mapDiv"></div>
         <svg id="centerPoint" xmlns="http://www.w3.org/2000/svg">
             <circle id="crosshair" cx="3" cy="3" r="3" fill="red" />
