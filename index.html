@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
-    
+
     <head>
         <title>Extent Helper</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9">
-        <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/js/dojo/dijit/themes/claro/claro.css">
-        <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/js/esri/css/esri.css">
+        <link rel="stylesheet" href="https://js.arcgis.com/3.18/esri/css/esri.css">
         <style>
             html, body, #mapDiv, .map.container {
                 padding:0;
@@ -63,33 +62,33 @@
         <script>
             var dojoConfig = { parseOnLoad: true }; // Do this to ensure the buttons draw with the theme.
         </script>
-        <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/"></script>
+        <script src="https://js.arcgis.com/3.18/"></script>
         <script>
             dojo.require("esri.map");
             dojo.require("esri.geometry");
             dojo.require("dijit.Dialog");
             dojo.require("dijit.form.Button");
             dojo.require("dojox.html.entities");
-            
+
             function toWGS(geom) {
                 return esri.geometry.webMercatorToGeographic(geom);
             }
-            
+
             function init() {
                 map = new esri.Map("mapDiv", {
                     center: [-95.10, 39.1],
                     zoom: 3,
                     basemap: "topo"
                 });
-                
+
                 dojo.connect(map, "onExtentChange", function(extent) {
                     updateExtentLabels(extent);
                 });
-                
+
                 dojo.connect(map, "onPan", function(extent) {
                     updateExtentLabels(extent);
                 });
-                
+
                 dojo.connect(dojo.byId("centerPoint"), "onclick", function() {
                     // Determine the current setting.
                     var visibility;
@@ -97,14 +96,14 @@
                         visibility = "block";
                     }
                     else {
-                        visibility = "none"    
+                        visibility = "none"
                     }
                     // Set the visibility.
                     dojo.style("centerLabel", {
                         "display": visibility
                     });
                 });
-                
+
                 dojo.connect(dojo.byId("btnJavascript"), "onclick", function() {
                     var popup = new dijit.Dialog({
                         title: "Javascript extent",
@@ -113,7 +112,7 @@
                     });
                     popup.show();
                 });
-                
+
                 dojo.connect(dojo.byId("btnFlex"), "onclick", function() {
                     var popup = new dijit.Dialog({
                         title: "Flex extent",
@@ -122,7 +121,7 @@
                     });
                     popup.show();
                 });
-                
+
                 dojo.connect(dojo.byId("btnSilverlight"), "onclick", function() {
                     var popup = new dijit.Dialog({
                         title: "Silverlight extent",
@@ -131,10 +130,10 @@
                     });
                     popup.show();
                 });
-                
+
             }
             dojo.ready(init);
-            
+
             function updateExtentLabels(extent) {
                 wgsExtent = toWGS(extent);
                 var center = esri.geometry.webMercatorToGeographic(extent.getCenter());
@@ -145,13 +144,13 @@
                 dojo.byId("bottomExtent").innerHTML = wgsExtent.ymin.toFixed(6);
                 dojo.byId("centerLabel").innerHTML = center.x.toFixed(6) + ", " + center.y.toFixed(6);
             }
-            
+
             function getExtent(extent) {
                 var message = "";
                 message = "Xmin: " + extent.xmin + " " + "Ymin: " + extent.ymin + " " + "Xmax: " + extent.xmax + " " + "Ymax: " + extent.ymax + " (wkid: " + extent.spatialReference.wkid + ")";
                 dojo.byId("extent").innerHTML = jsExtent(extent) + "</br>" + flexExtent(extent) + "</br>" + silverlightExtent(extent);
             }
-            
+
             function jsExtent(extent) {
                 var message;
                 message = 'esri.geometry.Extent({' +
@@ -163,7 +162,7 @@
                     '}});';
                 return message;
             }
-            
+
             function flexExtent(extent) {
                 var message;
                 message = '<esri:Extent id="initialExtent"' +
@@ -175,7 +174,7 @@
                     '/></esri:Extent>';
                 return message;
             }
-            
+
             function silverlightExtent(extent) {
                 var message;
                 message = 'Extent="' + extent.xmin + ',' + extent.ymin + ',' + extent.xmax + ',' + extent.ymax + '"';
@@ -183,7 +182,7 @@
             }
         </script>
     </head>
-    
+
     <body class="claro">
         <div id="leftExtent" class="mapLabel">left</div>
         <div id="topExtent" class="mapLabel">top</div>
@@ -200,7 +199,7 @@
             <div id="centerLabel" class="mapLabel">center</div>
         </svg>
     </body>
-    
+
     <script type="text/javascript">
         var _gauges = _gauges || [];
         (function() {
@@ -214,5 +213,5 @@
             s.parentNode.insertBefore(t, s);
         })();
     </script>
-    
+
 </html>
