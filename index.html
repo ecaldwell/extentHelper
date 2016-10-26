@@ -53,12 +53,18 @@
                 height: 15px;
             }
             #xLabel {
-                top: 5px;
-                right: 5px;
+                bottom: 5px;
+                left: 5px;
                 width: 200px;
                 height: 3em;
                 font-size: medium;
                 padding-bottom: .75em;
+            }
+            #basemapToggle {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                z-index: 50;
             }
         </style>
         <script>
@@ -66,37 +72,55 @@
         </script>
         <script src="https://js.arcgis.com/3.18/"></script>
         <script>
-            dojo.require("esri.map");
-            dojo.require("esri.geometry");
-            dojo.require("dijit.Dialog");
-            dojo.require("dijit.form.Button");
-            dojo.require("dojox.html.entities");
+          require([
+              "esri/map",
+              "esri/geometry/webMercatorUtils",
+              "esri/dijit/BasemapToggle",
+              "dijit/Dialog",
+              "dijit/form/Button",
+              "dojox/html/entities"
+          ], function(
+              Map,
+              webMercatorUtils,
+              BasemapToggle,
+              Dialog,
+              Button,
+              entities
+          ) {
 
-            function toWGS(geom) {
-                return esri.geometry.webMercatorToGeographic(geom);
-            }
+              function toWGS(geom) {
+                return webMercatorUtils.webMercatorToGeographic(geom);
+              }
 
-            function init() {
-                map = new esri.Map("mapDiv", {
-                    center: [-95.10, 39.1],
-                    zoom: 3,
-                    basemap: "topo"
+              function init() {
+                map = new Map("mapDiv", {
+                  center: [-95.10, 39.1],
+                  zoom: 3,
+                  basemap: "topo"
                 });
 
                 dojo.connect(map, "onExtentChange", function(extent) {
-                    updateExtentLabels(extent);
+                  updateExtentLabels(extent);
                 });
 
                 dojo.connect(map, "onPan", function(extent) {
-                    updateExtentLabels(extent);
+                  updateExtentLabels(extent);
                 });
 
-            }
-            dojo.ready(init);
+                var basemapToggle = new BasemapToggle({
+                  theme: "basemapToggle",
+                  map: map,
+                  visible: true,
+                  basemap: "satellite"
+                }, "basemapToggle");
+                basemapToggle.startup();
 
-            function updateExtentLabels(extent) {
+              }
+              dojo.ready(init);
+
+              function updateExtentLabels(extent) {
                 wgsExtent = toWGS(extent);
-                var center = esri.geometry.webMercatorToGeographic(extent.getCenter());
+                var center = webMercatorUtils.webMercatorToGeographic(extent.getCenter());
                 var zoomLevel = map.getZoom();
 
                 dojo.byId("leftExtent").innerHTML = wgsExtent.xmin.toFixed(6);
@@ -104,19 +128,20 @@
                 dojo.byId("rightExtent").innerHTML = wgsExtent.xmax.toFixed(6);
                 dojo.byId("bottomExtent").innerHTML = wgsExtent.ymin.toFixed(6);
                 dojo.byId("xLabel").innerHTML = "Centered at </br>" + center.x.toFixed(6) + ", " + center.y.toFixed(6) + "</br> Zoom Level " + zoomLevel;
-            }
+              }
 
-            function jsExtent(extent) {
+              function jsExtent(extent) {
                 var message;
                 message = 'esri.geometry.Extent({' +
-                    ' "xmin":' + extent.xmin +
-                    ',"ymin":' + extent.ymin +
-                    ',"xmax":' + extent.xmax +
-                    ',"ymax":' + extent.ymax +
-                    ',"spatialReference":{"wkid":' + extent.spatialReference.wkid +
-                    '}});';
+                ' "xmin":' + extent.xmin +
+                ',"ymin":' + extent.ymin +
+                ',"xmax":' + extent.xmax +
+                ',"ymax":' + extent.ymax +
+                ',"spatialReference":{"wkid":' + extent.spatialReference.wkid +
+                '}});';
                 return message;
-            }
+              }
+          });
 
         </script>
     </head>
@@ -127,7 +152,9 @@
         <div id="rightExtent" class="mapLabel">right</div>
         <div id="bottomExtent" class="mapLabel">bottom</div>
         <div id="xLabel" class="mapLabel"></div>
-        <div id="mapDiv"></div>
+        <div id="mapDiv">
+            <div id="basemapToggle"></div>
+        </div>
         <svg id="centerPoint" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <path d="M2.64,1.27L7.5,6.13l4.84-4.84C12.5114,1.1076,12.7497,1.0029,13,1c0.5523,0,1,0.4477,1,1
           	c0.0047,0.2478-0.093,0.4866-0.27,0.66L8.84,7.5l4.89,4.89c0.1648,0.1612,0.2615,0.3796,0.27,0.61c0,0.5523-0.4477,1-1,1
