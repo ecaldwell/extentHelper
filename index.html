@@ -75,17 +75,11 @@
           require([
               "esri/map",
               "esri/geometry/webMercatorUtils",
-              "esri/dijit/BasemapToggle",
-              "dijit/Dialog",
-              "dijit/form/Button",
-              "dojox/html/entities"
+              "esri/dijit/BasemapToggle"
           ], function(
               Map,
               webMercatorUtils,
-              BasemapToggle,
-              Dialog,
-              Button,
-              entities
+              BasemapToggle
           ) {
 
               function toWGS(geom) {
@@ -130,17 +124,6 @@
                 dojo.byId("xLabel").innerHTML = "Centered at </br>" + center.x.toFixed(6) + ", " + center.y.toFixed(6) + "</br> Zoom Level " + zoomLevel;
               }
 
-              function jsExtent(extent) {
-                var message;
-                message = 'esri.geometry.Extent({' +
-                ' "xmin":' + extent.xmin +
-                ',"ymin":' + extent.ymin +
-                ',"xmax":' + extent.xmax +
-                ',"ymax":' + extent.ymax +
-                ',"spatialReference":{"wkid":' + extent.spatialReference.wkid +
-                '}});';
-                return message;
-              }
           });
 
         </script>
