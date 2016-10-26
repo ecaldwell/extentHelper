@@ -52,12 +52,6 @@
                 width: 15px;
                 height: 15px;
             }
-            #centerLabel {
-                left: 51%;
-                bottom: 51%;
-                font-size: medium;
-                display: none;
-            }
             #xLabel {
                 top: 5px;
                 right: 5px;
@@ -97,21 +91,6 @@
                     updateExtentLabels(extent);
                 });
 
-                dojo.connect(dojo.byId("centerPoint"), "onclick", function() {
-                    // Determine the current setting.
-                    var visibility;
-                    if (dojo.getStyle("centerLabel", "display") === "none") {
-                        visibility = "block";
-                    }
-                    else {
-                        visibility = "none"
-                    }
-                    // Set the visibility.
-                    dojo.style("centerLabel", {
-                        "display": visibility
-                    });
-                });
-
             }
             dojo.ready(init);
 
@@ -124,7 +103,6 @@
                 dojo.byId("topExtent").innerHTML = wgsExtent.ymax.toFixed(6);
                 dojo.byId("rightExtent").innerHTML = wgsExtent.xmax.toFixed(6);
                 dojo.byId("bottomExtent").innerHTML = wgsExtent.ymin.toFixed(6);
-                dojo.byId("centerLabel").innerHTML = center.x.toFixed(6) + ", " + center.y.toFixed(6);
                 dojo.byId("xLabel").innerHTML = "Centered at </br>" + center.x.toFixed(6) + ", " + center.y.toFixed(6) + "</br> Zoom Level " + zoomLevel;
             }
 
@@ -156,7 +134,6 @@
           	c-0.2577,0.0107-0.508-0.0873-0.69-0.27L7.5,8.87l-4.85,4.85C2.4793,13.8963,2.2453,13.9971,2,14c-0.5523,0-1-0.4477-1-1
           	c-0.0047-0.2478,0.093-0.4866,0.27-0.66L6.16,7.5L1.27,2.61C1.1052,2.4488,1.0085,2.2304,1,2c0-0.5523,0.4477-1,1-1
           	C2.2404,1.0029,2.4701,1.0998,2.64,1.27z"/>
-            <div id="centerLabel" class="mapLabel">center</div>
         </svg>
     </body>
 
