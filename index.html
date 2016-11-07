@@ -126,12 +126,13 @@
                 wgsExtent = toWGS(extent);
                 var center = webMercatorUtils.webMercatorToGeographic(extent.getCenter());
                 var zoomLevel = map.getZoom();
+                var scale = Math.round(map.getScale()).toLocaleString();
 
                 dojo.byId("leftExtent").innerHTML = wgsExtent.xmin.toFixed(6);
                 dojo.byId("topExtent").innerHTML = wgsExtent.ymax.toFixed(6);
                 dojo.byId("rightExtent").innerHTML = wgsExtent.xmax.toFixed(6);
                 dojo.byId("bottomExtent").innerHTML = wgsExtent.ymin.toFixed(6);
-                dojo.byId("xLabel").innerHTML = "Centered at </br>" + center.x.toFixed(6) + ", " + center.y.toFixed(6) + "</br> Zoom Level " + zoomLevel;
+                dojo.byId("xLabel").innerHTML = "Centered at </br>" + center.x.toFixed(6) + ", " + center.y.toFixed(6) + "</br> Zoom Level " + zoomLevel + " (1:" + scale + ")";
               }
 
           });
