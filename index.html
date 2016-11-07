@@ -66,20 +66,25 @@
                 right: 20px;
                 z-index: 50;
             }
+            #search {
+                position: absolute;
+                top: 20px;
+                left: 80px;
+                z-index: 50;
+            }
         </style>
-        <script>
-            var dojoConfig = { parseOnLoad: true }; // Do this to ensure the buttons draw with the theme.
-        </script>
         <script src="https://js.arcgis.com/3.18/"></script>
         <script>
           require([
               "esri/map",
               "esri/geometry/webMercatorUtils",
-              "esri/dijit/BasemapToggle"
+              "esri/dijit/BasemapToggle",
+              "esri/dijit/Search"
           ], function(
               Map,
               webMercatorUtils,
-              BasemapToggle
+              BasemapToggle,
+              Search
           ) {
 
               function toWGS(geom) {
@@ -107,6 +112,12 @@
                   basemap: "satellite"
                 }, "basemapToggle");
                 basemapToggle.startup();
+
+                var search = new Search({
+                  map: map,
+                  enableInfoWindow: false
+                }, "search");
+                search.startup();
 
               }
               dojo.ready(init);
@@ -136,6 +147,7 @@
         <div id="xLabel" class="mapLabel"></div>
         <div id="mapDiv">
             <div id="basemapToggle"></div>
+            <div id="search"></div>
         </div>
         <svg id="centerPoint" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <path d="M2.64,1.27L7.5,6.13l4.84-4.84C12.5114,1.1076,12.7497,1.0029,13,1c0.5523,0,1,0.4477,1,1
